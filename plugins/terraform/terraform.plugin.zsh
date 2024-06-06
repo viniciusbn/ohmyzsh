@@ -5,7 +5,7 @@ function tf_prompt_info() {
   [[ -d .terraform && -r .terraform/environment ]] || return
 
   local workspace="$(< .terraform/environment)"
-  echo "${ZSH_THEME_TF_PROMPT_PREFIX-[}${workspace:gs/%/%%}${ZSH_THEME_TF_PROMPT_SUFFIX-]}"
+  echo "<tf_w:${ZSH_THEME_TF_PROMPT_PREFIX-[}${workspace:gs/%/%%}${ZSH_THEME_TF_PROMPT_SUFFIX-]}>"
 }
 
 function tf_version_prompt_info() {
@@ -14,6 +14,9 @@ function tf_version_prompt_info() {
     echo "${ZSH_THEME_TF_VERSION_PROMPT_PREFIX-[}${terraform_version:gs/%/%%}${ZSH_THEME_TF_VERSION_PROMPT_SUFFIX-]}"
 }
 
+if [[ "$SHOW_TF_WORKSPACE_PROMPT" != false && "$RPROMPT" != *'$(tf_prompt_info)'* ]]; then
+  RPROMPT='$(tf_prompt_info)'"$RPROMPT"
+fi
 
 alias tf='terraform'
 alias tfa='terraform apply'
